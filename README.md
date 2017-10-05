@@ -1,4 +1,6 @@
-# FYP---Anonymous-Reputation-SystemIntroduction
+# FYP---Anonymous-Reputation-System
+
+Introduction
 The aim of this project is to prevent Distributed Denial of Services attack by making use of blind signature. 
 For more information about Blind Signature, refer to https://en.wikipedia.org/wiki/Blind_signature
 
