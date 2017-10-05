@@ -1,0 +1,118 @@
+<html>
+  <meta charset="UTF-8">
+
+<!-- stylesheet -->
+<link rel="stylesheet" href="style/WhistleBlower/bootstrap.min.js">
+
+<!-- jquery -->
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+
+<!-- library for decoding the certificates -->
+<script src="bin/jsencrypt.min.js"></script>
+
+<!-- library for the math -->
+<script src="lib/jsbn/jsbn.js" ></script>
+<script src="lib/jsbn/jsbn2.js" ></script>
+
+<!-- Customized library for creating the blind signature -->
+<script src="scripts/WhistleBlower.js"></script>
+
+<!-- library md5.js -->
+<script src="scripts/md5.js"></script>
+
+<body onload="setValues()" background="images/background5.jpg">
+
+<!-- start form -->
+<div class="container">
+    <div class="form-group">
+        <div align="center">
+        <!-- actual table -->
+        <h2> ------------ For WhistleBlower -----------</h2> 
+            <label for="pubkey">Public Key : </label><br/>
+            <textarea id="pubkey" rows="15" cols="65" class="form-control">
+        -----BEGIN PUBLIC KEY-----
+        MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAowkDHhOZ8hM0jNhB5BAM
+        U50WqjZzJ3B31SPN5oreCn9PMxdJJyI1YW6fwMEPYmbOWDOWGlS6cbMDB1REYPFV
+        z/3AvIhIyrPEzstZzu9MUZsyeYgw+jl73ORZo0xlYCR/QZLXjQt79OI4d0CPgifH
+        X/BAaIQuo67HUwRNxlfOW3+OyCjJCYxzIxpkuFtE3voCDoUc7SIRnmhcMObvyEI5
+        of2zNO+4DrVjFv4fb1cgI2lQZQ8+cpxnmlXolSiobL0KKIUqHgmMGfeqWrCW6GLE
+        pNqhJ+YvOzXPbdyxHNJEG3LLveRVVT2VBzcaGFDKQXjqfvtvsAwhROAjJONRM/Oq
+        nCJEWfifiuYvCDSqqNM+XWvNO3svyuCIGw3fHxwulPhEcW4jOMKagN6NOjv+tnKA
+        4OwJ0/EMK2Y2qomEmWjypkN0wCFFYwrNRgystLnrDuaXzjOckDjV4+Hy3IMWXgjU
+        jFy+VRFANYNcfNqRLwaRv4ZeXyTNtPfQRL5OnQjJz4tr6zXllEyJDdqu5Hgl/N1c
+        ZC8zdfxsaVfDutswGmYBruzBQ8dJOiMRtdWRCbIih8gPCsQXEYNdvbgMj5Asaj38
+        lLSXM6FoRBuSc5jR6xLa5qHCxYzj2QyGNJUiECsLnjhfVDH+2kJ6h9dYTMKnTaS+
+        HcCzvGROu3gRNkkusdb3+XMCAwEAAQ==
+        -----END PUBLIC KEY-----
+            </textarea><br/>
+
+            <label for="input">Text to encrypt* :</label><br/>
+            <textarea id="pt" name="pt" type="text" rows=4 cols=70 placeholder="Enter your text" class="form-control" ></textarea><br/>
+            Value of r to be submitted with the token (Optional) : <br/>
+            <input type="text" id="prev_r" size="92" class="form-control" /><br/>
+            Token (Optional) : <br/>
+            <textarea id="token" name="name" type="text" rows=4 cols=70 placeholder="Paste your token (if any)" class="form-control"></textarea><br/>
+            <div align="left" > *mandatory fields </div>
+            <input id="testme" type="button" value="Submit Report" class="btn btn-warning" onclick="send_1()" /><br/>
+        </div>
+    </div> <!-- end of form-group -->
+    <br />
+</div> <!-- end of container -->
+
+<div class="container" align="center"> 
+    <h2>------------ Summary (Generated) -----------</h2>
+<table class="table table-striped table-hover" width="100%" style="table-layout:fixed; width="300px;">
+    <tr>
+        <td width="20%">N = </td>
+        <td>
+            <textarea id="N" name="N" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>
+    <tr>
+        <td>e = </td>
+        <td>
+           <textarea id="e" name="e" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>   
+    <tr>
+        <td>Random nonce r = </td>
+        <td>
+           <textarea id="r" name="r" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            MD5 Hash of r: 
+        </td>
+        <td>
+            <textarea id="md5" name="md5" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Blinding factor b = 
+        </td>
+        <td>
+            <textarea id="b" name="b" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>
+    <tr>
+        <td>Unblinding factor b^-1= </td>
+        <td>
+            <textarea id="b1" name="b1" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            Blind message [b=h(r)*(b)^e mod n]: 
+        </td>
+        <td>
+            <textarea id="blind" name="blind" type="text" rows=4 cols=70 class="form-control" readonly></textarea><br/>
+        </td>
+    </tr>
+</table>
+</div>
+<br />
+<!-- end form -->
+</body>
+</html>

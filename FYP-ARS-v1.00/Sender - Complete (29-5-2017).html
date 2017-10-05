@@ -1,0 +1,343 @@
+<html>
+  <meta charset="UTF-8">
+
+<script src="bin/jsencrypt.min.js"></script>
+<script src="md5.js"></script>
+<script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
+<script src="lib/jsbn/jsbn.js" ></script>
+<script src="lib/jsbn/jsbn2.js" ></script>
+
+<script>
+//issue 1: difficult in computing large number ^ large number 
+// possible solution is to perform a mod when the result is too large 
+var p;
+var q;
+var N;// p*q i.e. p=23 q=43 must be two prime number (big enuff)
+var r;// any random number such that gcd (r,N) = 1 
+var e; //note that e has to be a value between 1 to (p-1)(q-1)
+var d;// d = e^-1 mod (p-1)(q-1)
+var r1;
+
+function send_1(){
+
+	document.getElementById("blind").value ="";
+	document.getElementById("sign").value ="";
+	document.getElementById("unblind").value ="";
+	document.getElementById("verify").value ="";
+	document.getElementById("verify_2").value ="";	
+/*
+	//testing purpose
+	var r = new BigInteger("124");// any random number such that gcd (r,N) = 1 
+	var N = new BigInteger("989");// p*q i.e. p=23 q=43 must be two prime number (big enuff)
+	var e = new BigInteger("523"); //note that e has to be a value between 1 to (p-1)(q-1)
+	var d = e.modInverse(new BigInteger("924"));// d = e^-1 mod (p-1)(q-1)
+	var r1 = r.modInverse(N);
+
+	document.getElementById("r").value = r;	
+	document.getElementById("N").value = N;
+	document.getElementById("e").value = e;
+	document.getElementById("d").value = d;
+	document.getElementById("r1").value = r1;
+*/	
+	
+	//fetch the encrypt object
+	var encrypt = new JSEncrypt();
+    encrypt.setPublicKey($('#pubkey').val());
+		  
+	var pubkey = encrypt.getKey();		  
+		
+	//console.log(pubkey.n);
+	//console.log(pubkey.e);			
+	N = new BigInteger(""+pubkey.n);
+	e = new BigInteger(""+pubkey.e);
+	  
+	document.getElementById("N").value = N;
+	document.getElementById("e").value = e;
+
+	//fetch the decrypt object 
+	var decrypt = new JSEncrypt();
+	decrypt.setPrivateKey($('#privkey').val());
+	  
+	var privkey = decrypt.getKey();
+	 
+	p = new BigInteger(""+privkey.p);
+	q = new BigInteger(""+privkey.q);
+	d = new BigInteger(""+privkey.d);	
+	
+	document.getElementById("d").value = d;
+	document.getElementById("p").value = p;
+	document.getElementById("q").value = q;
+
+	var r = generateR(N);
+	//var r = new BigInteger("123");
+	document.getElementById("r").value = r;
+	
+	r1 = r.modInverse(N);
+	document.getElementById("r1").value = r1;
+
+	//Get the plaintext 
+	var pt = document.getElementById("pt").value;
+	
+	//hashing the message 
+	var h = md5(pt);	
+	document.getElementById("md5").value = h;
+		
+	//protocol 
+	
+	//convert the hash into bigInteger
+	c = new BigInteger(h);
+
+	//generate the blind message 		
+	blind_message = calBlindSignature(r, e, N, c);		
+	document.getElementById("blind").value += (blind_message);
+	
+	//sign the message
+	signed_blind_message = calSignedBlindSignature(blind_message, d, N);
+	document.getElementById("sign").value += (signed_blind_message); 
+						
+	//unblind (m * r^e)^d * r1 mod N - to be done on the client side
+	unblind_signed_message = calUnBlindSignedSignature(signed_blind_message, r1, N);
+	document.getElementById("unblind").value += (unblind_signed_message);
+			
+	//verify signed message - message m^d	
+	//check if signed message, m^d, is equals to unblinded_signed_message, unblind (m * r^e)^d * r1 mod N	
+	signed_message = encrypt_1(c, d, N);						
+	document.getElementById("verify").value += (signed_message);
+			
+	//calculate m^d^e mod N 
+	verify_m_d_e = encrypt_1(signed_message, e, N);
+	document.getElementById("verify_2").value += (verify_m_d_e);
+			
+	//verify that m^d^e mod N equals to m mod N 
+	var temp = new BigInteger(h);
+	verify_m = temp.mod(N);
+	document.getElementById("verify_3").value += (verify_m);
+			
+	console.log("Done");
+	
+}
+
+function generateR(N){
+	var array = new Uint32Array(1);
+	var r = new BigInteger("0");
+	do{
+		window.crypto.getRandomValues(array);
+		r = new BigInteger(""+array[0]);		
+	}while(r.gcd(N) != 1 || r.compareTo(N) >= 0); //need to include || r > N if using actual p and q 
+	
+	//console.log("random number r is :" + r);
+	return r; 
+}
+
+function calBlindSignature(r,e,N,text){
+	var a = r.modPow(e, N);
+	var blind_message = text.multiply(a).mod(N);
+	return blind_message;
+}
+
+function calSignedBlindSignature(blind_message, d, N){
+	return blind_message.modPow(d, N); 
+}
+
+function calUnBlindSignedSignature(sign_message, r1, N){
+	unblind_signed_message = (sign_message.multiply(r1)).mod(N);
+	return unblind_signed_message;
+}
+
+function encrypt_1(text, e, N){
+	return text.modPow(e, N);
+}
+
+</script>
+<body>
+<div align="center">
+<!-- actual table -->
+<div align="center"> ------------ blind signature testing -----------</div>
+<div align="center"> ------------ Enter the following - Sender -----------</div>
+<label for="privkey">Private Key</label><br/>
+    <textarea id="privkey" rows="15" cols="65">
+-----BEGIN RSA PRIVATE KEY-----
+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
+-----END RSA PRIVATE KEY-----
+	</textarea><br/>
+	
+    <label for="pubkey">Public Key</label><br/>
+    <textarea id="pubkey" rows="15" cols="65">
+-----BEGIN PUBLIC KEY-----
+MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAowkDHhOZ8hM0jNhB5BAM
+U50WqjZzJ3B31SPN5oreCn9PMxdJJyI1YW6fwMEPYmbOWDOWGlS6cbMDB1REYPFV
+z/3AvIhIyrPEzstZzu9MUZsyeYgw+jl73ORZo0xlYCR/QZLXjQt79OI4d0CPgifH
+X/BAaIQuo67HUwRNxlfOW3+OyCjJCYxzIxpkuFtE3voCDoUc7SIRnmhcMObvyEI5
+of2zNO+4DrVjFv4fb1cgI2lQZQ8+cpxnmlXolSiobL0KKIUqHgmMGfeqWrCW6GLE
+pNqhJ+YvOzXPbdyxHNJEG3LLveRVVT2VBzcaGFDKQXjqfvtvsAwhROAjJONRM/Oq
+nCJEWfifiuYvCDSqqNM+XWvNO3svyuCIGw3fHxwulPhEcW4jOMKagN6NOjv+tnKA
+4OwJ0/EMK2Y2qomEmWjypkN0wCFFYwrNRgystLnrDuaXzjOckDjV4+Hy3IMWXgjU
+jFy+VRFANYNcfNqRLwaRv4ZeXyTNtPfQRL5OnQjJz4tr6zXllEyJDdqu5Hgl/N1c
+ZC8zdfxsaVfDutswGmYBruzBQ8dJOiMRtdWRCbIih8gPCsQXEYNdvbgMj5Asaj38
+lLSXM6FoRBuSc5jR6xLa5qHCxYzj2QyGNJUiECsLnjhfVDH+2kJ6h9dYTMKnTaS+
+HcCzvGROu3gRNkkusdb3+XMCAwEAAQ==
+-----END PUBLIC KEY-----
+	</textarea><br/>
+
+    <label for="input">Text to encrypt:</label><br/>
+    <textarea id="pt" name="pt" type="text" rows=4 cols=70>This is a test!</textarea><br/>
+    <input id="testme" type="button" value="Test Me!!!" onclick="send_1()" /><br/>
+</div>
+<br />
+<div align="center"> ------------ Result - sender  -----------</div>
+<table align="center">
+	<tr>
+		<td>
+			p = 
+		</td>
+		<td>
+			<input type="text" id="p" size="100"/>			
+		</td>
+	</tr>
+	<tr>
+		<td>
+			q = 
+		</td>
+		<td>
+			<input type="text" id="q" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>N = </td>
+		<td>
+			<input type="text" id="N" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>r = </td>
+			<td>
+		<input type="text" id="r" size="100"/>
+	</td>
+	</tr>
+	<tr>
+		<td>e = </td>
+		<td>
+			<input type="text" id="e" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>d =
+		<td>
+			<input type="text" id="d" size="100"/>
+		</td>
+	</tr>
+		<tr>
+		<td>r1 = </td>
+		<td>
+			<input type="text" id="r1" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			MD5 Hash of PT: 
+		</td>
+		<td>
+			<input type="text" id="md5" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Blind message [b=m*r^e mod N]: 
+		</td>
+		<td>
+			<input type="text" id="blind" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Server: Sign message [s=b^d mod N]: 
+		</td>
+		<td>
+			<input type="text" id="sign" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Server: Unblind message <br/> [U=(r1)*s mod N] <br />=m^d mod N: 
+		</td>
+		<td>
+			<input type="text" id="unblind" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Server: Verify Unblind [m^d mod N]: 
+		</td>
+		<td>
+			<input type="text" id="verify" size="100"/>
+		</td>
+	</tr>
+	<tr>
+		<td>
+			m^d^e mod N: 
+		</td>
+		<td>
+			<input type="text" id="verify_2" size="100"/> 
+		</td>
+	</tr>
+	<tr>
+		<td>
+			Verify [m mod N]: 
+		</td>
+		<td>
+			<input type="text" id="verify_3" size="100"/> 
+		</td>
+	</tr>
+</table>
+<br />
+
+</body>
+</html>
