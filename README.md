@@ -2,6 +2,8 @@
 The aim of this project is to prevent Distributed Denial of Services attack by making use of blind signature. 
 For more information about Blind Signature, refer to https://en.wikipedia.org/wiki/Blind_signature
 
+The web application is created as a proof of concept of how blind signature can be used to provide a token of trust in anonymous connection. For more information, please refer to the amended final report. 
+
 Credits: 
 This project is done under the supervision of Prof Alwen Fernanto Tiu and Prof Anwitaman Datta. 
 This project uses the JSBN library written by Tom Wu @ http://www-cs-students.stanford.edu/~tjw/jsbn/ for the RSA math calculation. 
