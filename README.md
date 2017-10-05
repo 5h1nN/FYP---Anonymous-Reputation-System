@@ -28,7 +28,6 @@ b. Copy the FYP-ARS directory into the htdocs folder
 iii. Journalist.php
  iv. WhistleBlower.html
 c. Generate a SSL certified (self-signed) using the makecert command 
-```
-For more information:
+For more information on how to generate the SSL cert, refer to:
 https://support.comodo.com/index.php?/Knowledgebase/Article/View/1210/19/how-to-configure-a-certificate-for-use-in-xampp
 ```
