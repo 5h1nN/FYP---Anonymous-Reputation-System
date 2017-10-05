@@ -21,16 +21,12 @@ openssl rsa -pubout -in rsa_1024_priv.pem -out rsa_1024_pub.pem
 3. Setting up the Web Server using XAMPP 
 ```
 a. Download XAMPP 
-```
 b. Copy the FYP-ARS directory into the htdocs folder 
-```
-- In order for it to work, you need to replace the IP addresses stated in the following files to your ip address
-``` 
+(In order for it to work, you need to replace the IP addresses stated in the following files to your ip address) 
   i. Articles.php
  ii. databaseMgr.php
 iii. Journalist.php
  iv. WhistleBlower.html
-```
 c. Generate a SSL certified (self-signed) using the makecert command 
 ```
 For more information:
