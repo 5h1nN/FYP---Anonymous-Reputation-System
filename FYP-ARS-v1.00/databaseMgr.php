@@ -19,7 +19,7 @@ function dbConnect()
 }
 
 //if send from WhistleBlower.html
-if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://localhost/FYP-ARS/WhistleBlower.html"){
+if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://192.168.1.1/FYP-ARS/WhistleBlower.html"){
 	if(isset($_POST["plain_text"]) && $_POST["plain_text"] != ""){
 		echo 'Plain-text: ';
 		echo $_POST["plain_text"];
@@ -68,7 +68,7 @@ if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://loca
 }
 
 //if send from Journalist.php
-if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://localhost/FYP-ARS/Journalist.php"){
+if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://192.168.1.1/FYP-ARS/Journalist.php"){
 
 	if($_POST["action"] == "sign" &&
 		isset($_POST["text"]) && $_POST["text"] != "" && 

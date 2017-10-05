@@ -3,25 +3,25 @@
   <meta charset="UTF-8">
 
 <!-- stylesheet -->
-<link rel="stylesheet" href="style/Journalist/bootstrap.min.js">
+<link rel="stylesheet" href="https://192.168.1.1/FYP-ARS/style/Journalist/bootstrap.min.js">
 
 <!-- jquery -->
 <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 
 <!-- library for decoding the certificates -->
-<script src="bin/jsencrypt.min.js"></script>
+<script src="https://192.168.1.1/FYP-ARS/bin/jsencrypt.min.js"></script>
 
 <!-- library for the math -->
-<script src="lib/jsbn/jsbn.js" ></script>
-<script src="lib/jsbn/jsbn2.js" ></script>
+<script src="https://192.168.1.1/FYP-ARS/lib/jsbn/jsbn.js" ></script>
+<script src="https://192.168.1.1/FYP-ARS/lib/jsbn/jsbn2.js" ></script>
 
 <!-- Customized library for signing the blind signature -->
-<script src="scripts/Journalist.js"></script>
+<script src="https://192.168.1.1/FYP-ARS/scripts/Journalist.js"></script>
 
 <!-- library md5.js -->
-<script src="scripts/md5.js"></script>
+<script src="https://192.168.1.1/FYP-ARS/scripts/md5.js"></script>
 
-<body onload="validateToken()" background="images/background5.jpg">
+<body onload="validateToken()" background="https://192.168.1.1/FYP-ARS/images/background5.jpg">
 
 <div align="center" class="container"> <!-- start of main container-->
 	<!-- actual table -->

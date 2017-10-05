@@ -3,25 +3,25 @@
   <meta charset="UTF-8">
 
 <!-- stylesheet -->
-<link rel="stylesheet" href="style/Articles/bootstrap.min.js">
+<link rel="stylesheet" href="https://192.168.1.1/FYP-ARS/style/Articles/bootstrap.min.js">
 
 <!-- jquery -->
 <script src="http://code.jquery.com/jquery-1.8.3.min.js"></script>
 
 <!-- library for decoding the certificates -->
-<script src="bin/jsencrypt.min.js"></script>
+<script src="https://192.168.1.1/FYP-ARS/bin/jsencrypt.min.js"></script>
 
 <!-- library for the math -->
-<script src="lib/jsbn/jsbn.js" ></script>
-<script src="lib/jsbn/jsbn2.js" ></script>
+<script src="https://192.168.1.1/FYP-ARS/lib/jsbn/jsbn.js" ></script>
+<script src="https://192.168.1.1/FYP-ARS/lib/jsbn/jsbn2.js" ></script>
 
 <!-- Customized library for creating the token -->
-<script src="scripts/Articles.js"></script>
+<script src="https://192.168.1.1/FYP-ARS/scripts/Articles.js"></script>
 
 <!-- library md5.js -->
-<script src="scripts/md5.js"></script>
+<script src="https://192.168.1.1/FYP-ARS/scripts/md5.js"></script>
 
-<body onload="setValues()" background="images/background5.jpg">
+<body onload="setValues()" background="https://192.168.1.1/FYP-ARS/images/background5.jpg">
   <div class="container">
     <h1 align="center"> Welcome to ABC news portal ! </h1>
     <div class="form-group">

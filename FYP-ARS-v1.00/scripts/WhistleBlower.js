@@ -20,7 +20,7 @@ function setValues(){
 	
 	//fetch the encrypt object
 	var encrypt = new JSEncrypt();
-    encrypt.setPublicKey(document.getElementById("privkey").value);
+    encrypt.setPublicKey(document.getElementById("pubkey").value);
 		  
 	var pubkey = encrypt.getKey();		  
 					
@@ -77,9 +77,8 @@ function send_1(){
 	//checkCookie();
 
 	//send request to databaseMgr.php
-	
-		document.body.innerHTML += '<form id="dynForm" action="databaseMgr.php" method="post"><input type="hidden" name="plain_text" value="'+document.getElementById("pt").value+'"><input type="hidden" name="blind_message" value='+blind_message+""+'><input type="hidden" name="token" value='+document.getElementById("token").value+'><input type="hidden" name="prev_r" value='+document.getElementById("prev_r").value+'></form>';
-		document.getElementById("dynForm").submit();	
+	document.body.innerHTML += '<form id="dynForm" action="databaseMgr.php" method="post"><input type="hidden" name="plain_text" value="'+document.getElementById("pt").value+'"><input type="hidden" name="blind_message" value='+blind_message+""+'><input type="hidden" name="token" value='+document.getElementById("token").value+'><input type="hidden" name="prev_r" value='+document.getElementById("prev_r").value+'></form>';
+	document.getElementById("dynForm").submit();	
 	
 	console.log("Done");
 	
