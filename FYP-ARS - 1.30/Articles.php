@@ -24,6 +24,11 @@
 <body onload="setValues()" background="https://192.168.1.1/FYP-ARS/images/background5.jpg">
   <div class="container">
     <h1 align="center"> Welcome to ABC news portal ! </h1>
+    <br />
+    <?php 
+
+    ?>
+<!--
     <div class="form-group">
     <label for="pubkey">Public Key</label><br/>
       <textarea id="pubkey" rows="15" cols="100%" class="form-control">
@@ -45,7 +50,7 @@
     </div>
   </div>
   <br />
-
+-->
   <div class="container">
   <h2>Below is the list of Token(s) </h2>
   <?php 

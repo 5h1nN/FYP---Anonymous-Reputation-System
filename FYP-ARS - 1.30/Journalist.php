@@ -15,18 +15,18 @@
 <script src="https://192.168.1.1/FYP-ARS/lib/jsbn/jsbn.js" ></script>
 <script src="https://192.168.1.1/FYP-ARS/lib/jsbn/jsbn2.js" ></script>
 
-<!-- Customized library for signing the blind signature -->
-<script src="https://192.168.1.1/FYP-ARS/scripts/Journalist.js"></script>
-
 <!-- library md5.js -->
 <script src="https://192.168.1.1/FYP-ARS/scripts/md5.js"></script>
+
+<!-- Customized library for signing the blind signature -->
+<script src="https://192.168.1.1/FYP-ARS/scripts/Journalist.js"></script>
 
 <body onload="validateToken()" background="https://192.168.1.1/FYP-ARS/images/background5.jpg">
 
 <div align="center" class="container"> <!-- start of main container-->
 	<!-- actual table -->
 	<h2>------------ For Journalist -----------</h2>
-    <label for="privkey">Private Key : </label><br/>
+    <!--<label for="privkey">Private Key : </label><br/>-->
     <?php 
     	$privatekeys = getAllPrivateKeys();
 		foreach ($privatekeys as $privatekey){ 
@@ -53,7 +53,7 @@
 					<td style="word-wrap:break-word;">'.$report["blind_message"].'</td>
 					<td style="word-wrap:break-word;">'.$report["token"].'<input type="hidden" class="token form-control" value="'.$report["token"].'"></td>
 					<td style="word-wrap:break-word;">'.$report["prev_r"].'<input type="hidden" class="prev_r form-control" value="'.$report["prev_r"].'"></td>
-					<td style="word-wrap:break-word;" id="validity'.$index.'">'.$report["TrustLevel"].'</td>					
+					<td style="word-wrap:break-word;" id="validitybox'.$index.'">'.$report["TrustLevel"].'<input type="hidden" id="validity'.$index.'" class="form-control" value="'.$report["TrustLevel"].'"></td>					
 					<td align="center" style="word-wrap:break-word;">
 						<input id="sign" type="button" value="1" onclick="sign(\''.$report["blind_message"].'\',\''.$report["TrustLevel"].'\',\'1\')" class="btn btn-success" style="width: 100px;"/>
 						<br />

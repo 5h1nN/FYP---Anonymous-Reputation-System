@@ -60,6 +60,13 @@ if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://192.
 		$pubkey = $_POST["pubkey"];
 		$TrustLevel = getTrustLevelBasedOnPubCertificate($pubkey);
 
+/*
+		foreach ($TrustLevel as $tl){
+			echo "Trusted Level is ".$tl["TrustLevel"]."<br />";			
+		}
+*/
+		echo "Trusted Level is ".$TrustLevel."<br />";			
+
 		if($token == "" && $prev_r == ""){ //without token if without any token will insert cert = 1 & trustlevel = 1 
 			$connect = dbConnect();	
 			$connect->query("INSERT into report_db values ('$plain_text','$blind_message','$token', '$prev_r', '1', '1');");
@@ -70,8 +77,8 @@ if (isset($_SERVER["HTTP_REFERER"]) && $_SERVER["HTTP_REFERER"] == "https://192.
 			}
 
 		}else if ($token != "" && $prev_r != ""){  //with token 
-			$connect = dbConnect();	
-			$connect->query("INSERT into report_db values ('$plain_text','$blind_message','$token', '$prev_r', '$pubkey', '$Trustlevel');");
+			$connect = dbConnect();		
+			$connect->query("INSERT into report_db values ('$plain_text','$blind_message','$token', '$prev_r', '$pubkey', '$TrustLevel');");
 			if($connect)
 				print "Success - subsequent";
 			else{
@@ -223,10 +230,10 @@ function getListofReports(){
 }
 
 
-function saveToArticle($signed_blind_message, $CertToUse, $Trustlevel, $PrevTrustLevel){
+function saveToArticle($signed_blind_message, $CertToUse, $TrustLevel, $PrevTrustLevel){
 
 	$connect = dbConnect();	
-	$connect->query("INSERT into article_db values ('$signed_blind_message', '$CertToUse', '$Trustlevel', '$PrevTrustLevel');");
+	$connect->query("INSERT into article_db values ('$signed_blind_message', '$CertToUse', '$TrustLevel', '$PrevTrustLevel');");
 	if($connect)
 		print "successfully save article to article_db <br />";
 	else{
@@ -251,7 +258,9 @@ function create_dummy_token(){
 		$dummy.=rand(0,9);
 	}
 	
-	$connect->query("INSERT into article_db values ('$dummy');");
+	$randCertNo=rand(1,5);
+
+	$connect->query("INSERT into article_db values ('$dummy', '$randCertNo', '$randCertNo', '');");
 	if($connect)
 		print "successfully save dummy token ".$dummy." to article_db <br />";
 	else{
@@ -263,7 +272,7 @@ function create_dummy_token(){
 function getTrustLevelBasedOnPubCertificate($cert){
 	$connect = dbConnect();	
 	$query= "select TrustLevel from signingkey_db where CertNo like '$cert';";
-	$TrustLevel = array();	
+	$List_TrustLevel = array();	
 	$result = $connect->query($query);
 	$i =0;
 
@@ -278,7 +287,7 @@ function getTrustLevelBasedOnPubCertificate($cert){
 		while ($row = mysqli_fetch_assoc($result)) {
 			$TrustLevel = $row["TrustLevel"];
 
-			$TrustLevel[$i] = [
+			$List_TrustLevel[$i] = [
 				'TrustLevel' => $TrustLevel
 				];
 			$i++;
@@ -289,7 +298,7 @@ function getTrustLevelBasedOnPubCertificate($cert){
 		print "no result found";
 	}
 
-	return $TrustLevel; 
+	return $List_TrustLevel[0]["TrustLevel"]; 
 }
 
 function getAllPrivateKeys(){

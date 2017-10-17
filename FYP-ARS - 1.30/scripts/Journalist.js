@@ -29,10 +29,13 @@ function validateToken(){ //invoke by onload()
 		var validityID = "validity"+(i+1);		
 		if(list_of_token[i].value != "" && list_of_prev_r[i].value != ""){
 			
-			var CurrTrustLevel = document.getElementById(validityID); //based on the validity, we get the corresponding private key 
+			//console.log("Validity ID is " + validityID);
+			var CurrTrustLevel = document.getElementById(validityID).value; //based on the validity, we get the corresponding private key 
+			console.log("CurrTrustLevel is " + CurrTrustLevel);
 
 			var decrypt = new JSEncrypt();
 			var privkeyval = document.getElementById(CurrTrustLevel).value;
+			console.log("Private key used " + privkeyval);
 
 			decrypt.setPrivateKey(privkeyval);
 			  
@@ -43,10 +46,19 @@ function validateToken(){ //invoke by onload()
 			q = new BigInteger(""+privkey.q);
 			d = new BigInteger(""+privkey.d);	
 
+			//console.log("n is " + N);
+			//console.log("p is " + p);
+			//console.log("q is " + q);
+			//console.log("d is " + d);
+
 			var cToken = computeToken(list_of_prev_r[i].value);
 			
 			if(cToken != list_of_token[i].value){
-				document.getElementById(validityID).innerHTML="1";
+				//alert("testing");
+				document.getElementById(validityID).value="1";
+				document.getElementById("validitybox"+(i+1)).innerHTML="1";	
+
+				//console.log("validitybox"+(i+1));			
 				console.log(list_of_token[i].value+" != "+cToken);
 			}else{
 				//document.getElementById(validityID).innerHTML="True";
@@ -61,8 +73,12 @@ function validateToken(){ //invoke by onload()
 }
 
 function computeToken(prev_r){
+	//console.log(new BigInteger(md5(prev_r)+""));
 	var hash = new BigInteger(md5(prev_r)+"");
+	//console.log(typeof N);
+	//console.log(typeof d);
 	var encrypted_hash = hash.modPow(d, N);
+	console.log(encrypted_hash);
 	return encrypted_hash;
 }
 
